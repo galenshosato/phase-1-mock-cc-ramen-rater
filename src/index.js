@@ -1,79 +1,64 @@
-// get ramen from API
 let firstRamen
 
 fetch('http://localhost:3000/ramens')
 .then(resp => resp.json())
-.then(ramenMenu => ramenMenu.forEach(ramens => {
-    if(firstRamen === undefined) {
-        firstRamen = ramens
+.then(ramens => ramens.forEach((ramen) => {   
+    if (firstRamen === undefined) {
+        firstRamen = ramen
         renderRamen(firstRamen)
     }
-
-    let ramenPicture = document.createElement('img')
-    ramenPicture.src = ramens.image
+    ramenClick(ramen)
     
-    ramenPicture.addEventListener('click', (event => {
-        renderRamen(ramens)
-    }))
+    
+}))
+.then(() => {
+    addNewRamen()
+})
 
-
-    document.getElementById('ramen-menu').append(ramenPicture)
-
+function ramenClick(ramenPic) {
+    const clickImage = document.createElement('img')
+    clickImage.src = ramenPic.image
+    clickImage.addEventListener('click', (event) => {
+        renderRamen(ramenPic)
+    })
+    document.getElementById('ramen-menu').append(clickImage)
 }
-))
-
-
 
 function renderRamen(ramen) {
-    const ramenImage = document.querySelector('.detail-image')
-    ramenImage.src = ramen.image
-
     const ramenName = document.querySelector('.name')
-    ramenName.textContent = ramen.name
-
-    const ramenRestaurant = document.querySelector('.restaurant')
-    ramenRestaurant.textContent = ramen.restaurant
-
+    const ramenImg = document.querySelector('.detail-image')
+    const ramenRestuarant = document.querySelector('.restaurant')
     const ramenRating = document.getElementById('rating-display')
-    ramenRating.textContent = ramen.rating
-
     const ramenComment = document.getElementById('comment-display')
-    ramenComment.textContent = ramen.comment
-
     
+    ramenName.textContent = ramen.name
+    ramenImg.src = ramen.image
+    ramenRestuarant.textContent = ramen.restaurant
+    ramenRating.textContent = ramen.rating
+    ramenComment.textContent = ramen.comment
 
 }
 
-let ramenForm = document.getElementById('new-ramen')
-ramenForm.addEventListener('submit', (event) => {
-    event.preventDefault()
-    
-    const newName = document.getElementById('new-name')
-    const newRestaurant = document.getElementById('new-restaurant')
-    const newImage = document.getElementById('new-image')
-    const newRating = document.getElementById('new-rating')
-    const newComment = document.getElementById('new-comment')
-    
-    const newRamen = {
-        name: newName.value,
-        restaurant: newRestaurant.value,
-        image: newImage.value,
-        rating: newRating.value,
-        comment: newComment.value
-    }
-    
-    renderRamen(newRamen)
-    let ramenPic = document.createElement('img')
-    ramenPic.src = newRamen.image
+function addNewRamen() {
+    let newRamen = {}
+    const newRamenForm = document.getElementById('new-ramen')
+    newRamenForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+        let newRamenName = document.getElementById('new-name').value
+        let newRamenImg = document.getElementById('new-image').value
+        let newRamenRestaurant = document.getElementById('new-restaurant').value
+        let newRamenRating = document.getElementById('new-rating').value
+        let newRamenComment = document.getElementById('new-comment').value
+        newRamen = {
+            name: newRamenName,
+            image: newRamenImg,
+            restaurant: newRamenRestaurant,
+            rating: newRamenRating,
+            comment: newRamenComment
+        }
 
-    ramenPic.addEventListener('click', (event) => {
-        renderRamen(newRamen)
+         renderRamen(newRamen)
+         ramenClick(newRamen)
     })
-
-    document.getElementById('ramen-menu').append(ramenPic)
     
-
-    ramenForm.reset()
-    
-
-})
+}
