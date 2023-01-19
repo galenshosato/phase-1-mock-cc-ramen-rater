@@ -1,16 +1,17 @@
 let firstRamen
-
+let ramenCopy
 fetch('http://localhost:3000/ramens')
 .then(resp => resp.json())
-.then(ramens => ramens.forEach((ramen) => {   
+.then(ramens =>  {
+    ramenCopy = ramens
+    ramens.forEach((ramen) => {   
     if (firstRamen === undefined) {
         firstRamen = ramen
         renderRamen(firstRamen)
     }
     ramenClick(ramen)
-    
-    
-}))
+   
+})})
 .then(() => {
     addNewRamen()
 })
@@ -37,6 +38,7 @@ function renderRamen(ramen) {
     ramenRating.textContent = ramen.rating
     ramenComment.textContent = ramen.comment
 
+    
 }
 
 function addNewRamen() {
@@ -62,3 +64,4 @@ function addNewRamen() {
     })
     
 }
+
